@@ -148,4 +148,14 @@ bool MainWindow::verificarJaque(){
     return false;
 }
 
+void MainWindow::PiezaEliminada(Pieza *piece){
+    if(piece->getColor()=="BLACK"){
+        piece->setPos(250+700+30,70+25+auxPiezaMuerta1);
+        auxPiezaMuerta1 +=50;
+    }else{
+        piece->setPos(250-80,70+25+auxPiezaMuerta2);
+        auxPiezaMuerta2 +=50;
+    }
+}
+
 

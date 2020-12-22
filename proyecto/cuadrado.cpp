@@ -174,7 +174,8 @@ void cuadrado::Matar(){
     else
         mainwindow->chess->black.removeOne(a);
     mainwindow->collection[fila][columna]->piezaa = mainwindow->piezaSeleccionada;
-    delete(a);//eliminar la pieza victimada----------
+    //delete(a);//eliminar la pieza victimada----------*******
+    mainwindow->PiezaEliminada(a);
     //formatear los valores del cuadrado atacado
     mainwindow->piezaSeleccionada->getCuadrado()->estado = false;
     mainwindow->piezaSeleccionada->getCuadrado()->piezaa = NULL;
@@ -261,6 +262,8 @@ Pieza* cuadrado::cambiarPeon(Pieza *piece){
     }
     return piece;
 }
+
+
 
 //mainwindow->collection[filaB][columnaB];
 //lo siguiente es validar que si juega negro, toca ahora a blanco

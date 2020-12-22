@@ -35,6 +35,9 @@ public:
     tablero *chess;
     QGraphicsTextItem *labelJaqueWhite;
     QGraphicsTextItem *labelJaqueBlack;
+    void PiezaEliminada(Pieza *piece);
+    int auxPiezaMuerta1=0;
+    int auxPiezaMuerta2=0;
 private:
     QString texto;
     QGraphicsScene *gameScene;
