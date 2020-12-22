@@ -19,7 +19,7 @@ QList<Coordenada> alfil::movimientos(){
     bool AbajoD = true;
     bool AbajoI = true;
     QList<Coordenada> opciones;
-    qDebug()<<"MOVER TORRE";
+
     int i = 1;
     while(i<8){
         if(AbajoD  && this->getCuadrado()->fila+i< 8 && this->getCuadrado()->columna+i< 8){

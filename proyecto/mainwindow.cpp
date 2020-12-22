@@ -7,22 +7,21 @@
 MainWindow::MainWindow(QWidget *parent)
     :QGraphicsView(parent)
 {
-    texto="hello world";
-    qDebug()<<"entró al constructor\n";
+
     gameScene = new QGraphicsScene();
     gameScene->setSceneRect(0,0,1200,700);
     setFixedSize(1200,700);//valor del witgets
-
+    //setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    //setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     setScene(gameScene);
     QBrush brush;
     brush.setStyle(Qt::SolidPattern);
     brush.setColor(Qt::black);
     setBackgroundBrush(brush);
     int tmp = width();
-    qDebug()<<QString::number(tmp)+" valor del ancho\n";
     std::cout<<tmp+"..- valor\n";
     piezaSeleccionada = NULL;
-    turno = &turnoA;
+    turno = &turnoA;//representa el turno actual
     labelJaqueWhite = new QGraphicsTextItem();
     labelJaqueBlack = new QGraphicsTextItem();
     labelJaqueWhite->setZValue(1);
@@ -115,16 +114,16 @@ void MainWindow::setText(QString text){
     texto=text;
 }
 bool MainWindow::verificarJaque(){
-    QList<Coordenada>allMove;
-    QList<Coordenada>allMove2;
-    Coordenada tmp1(reyBlack->getCuadrado()->columna,reyBlack->getCuadrado()->fila);//Rey Negro
-    Coordenada tmp2(reyWhite->getCuadrado()->columna,reyWhite->getCuadrado()->fila);//Rey blanco
+    QList<Coordenada>allMove;//movimientos de las fichas blancas
+    QList<Coordenada>allMove2;//movimientos de fichas negras
+    Coordenada coordenadaReyNegro(reyBlack->getCuadrado()->columna,reyBlack->getCuadrado()->fila);//Rey Negro
+    Coordenada coordenadaReyBlanco(reyWhite->getCuadrado()->columna,reyWhite->getCuadrado()->fila);//Rey blanco
 
     for (int i = 0; i <chess->white.size();i++){
         if(chess->white.at(i)!=NULL){
             allMove=chess->white.at(i)->movimientos();
             for(int j = 0; j<allMove.size();j++){
-                if(allMove.at(j)==tmp1){
+                if(allMove.at(j)==coordenadaReyNegro){
                     labelJaqueBlack->setPlainText("JAQUE AL REY NEGRO");
                     return true;//poner en jaque al rey negro
                 }
@@ -132,11 +131,12 @@ bool MainWindow::verificarJaque(){
         }
 
     }
+    labelJaqueBlack->setPlainText("");
      for (int i = 0; i <chess->black.size();i++){
          if(chess->black.at(i)!=NULL){//actualizar la lista de negro y blanco
              allMove2=chess->black.at(i)->movimientos();
              for(int j = 0; j<allMove2.size();j++){
-                 if(allMove2.at(j)==tmp2){
+                 if(allMove2.at(j)==coordenadaReyBlanco){
                      labelJaqueWhite->setPlainText("JAQUE AL REY BLANCO");
                      return true;//poner en jaque al rey negro
 
@@ -144,12 +144,7 @@ bool MainWindow::verificarJaque(){
              }
          }
      }
-    /*for(int i = 0;i<allMove.size();i++){
-        if(allMove.at(i)==tmp1)
-            return true;
-        if(allMove.at(i)==tmp2)
-            return true;
-    }*/
+     labelJaqueWhite->setPlainText("");
     return false;
 }
 

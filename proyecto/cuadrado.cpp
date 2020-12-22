@@ -1,5 +1,6 @@
 #include "cuadrado.h"
 #include <QDebug>
+#include <QMessageBox>
 #include "mainwindow.h"
 #include "tablero.h"
 #include "pieza.h"
@@ -12,6 +13,8 @@
 #include "posiblemov.h"
 #include "./ui_elejirficha.h"
 #include "elejirficha.h"
+#include "./ui_winnerdialog.h"
+#include "winnerdialog.h"
 extern MainWindow *mainwindow;
 
 cuadrado::cuadrado(QGraphicsItem *parent) :QGraphicsRectItem(parent)
@@ -47,47 +50,8 @@ void cuadrado::setText(std::string _texto){
 void cuadrado::ubicacion(Pieza *piece){
 
     if(piece->ficha == "peon" && (fila == 0 || fila == 7)){
-        elejirficha guiR;
-        guiR.setModal(true);
-        guiR.setEleccion(eleccion);
-        guiR.exec();
-        if(mainwindow->piezaSeleccionada->getColor()=="WHITE"){
-            //Pieza *tmp = piezaa;
-            Pieza *a =piece;
-            if(*eleccion == "torre"){
-                piece = new torre("WHITE");
-            }else if(*eleccion =="reina"){
-                piece = new reina("WHITE");
-            }else if(*eleccion=="alfil"){
-                piece = new alfil("WHITE");
-            }else if(*eleccion =="caballo"){
-                piece = new caballo("WHITE");
-            }
-            mainwindow->addScene(piece);
-            mainwindow->chess->white.append(piece);
-            mainwindow->chess->white.removeOne(a);
-            delete(a);//eliminar la pieza victimada----------
-        }else {
-            //Pieza *tmp = piezaa;
-            Pieza *a =piece;
-            if(*eleccion == "torre"){
-                piece = new torre("BLACK");
-            }else if(*eleccion =="reina"){
-                piece = new reina("BLACK");
-            }else if(*eleccion=="alfil"){
-                piece = new alfil("BLACK");
-            }else if(*eleccion =="caballo"){
-                piece = new caballo("BLACK");
-            }
-            mainwindow->addScene(piece);
-            mainwindow->chess->black.append(piece);
-            mainwindow->chess->black.removeOne(a);
-            delete(a);//eliminar la pieza victimada----------
-        }
-
+            piece = cambiarPeon(piece);
     }
-
-
     //qDebug()<<piece->pixmap().width()/2;
     piece->setPos(x()+35 -piece->pixmap().width()/2  ,y()+30- piece->pixmap().width()/2 );//evaluar
     //piece->setPos(x()+50 -piece->pixmap().width()/2  ,y()+50- piece->pixmap().width()/2 );//evaluar
@@ -101,7 +65,7 @@ void cuadrado::ubicacion(Pieza *piece){
 void cuadrado::ubicacion2(PosibleMov *itemm){
 
 
-    qDebug()<<itemm->pixmap().width()/2;
+
         itemm->setPos(x()+35 -itemm->pixmap().width()/2  ,y()+30- itemm->pixmap().width()/2 );//evaluar
         item = itemm;
 
@@ -132,12 +96,8 @@ void cuadrado::mousePressEvent(QGraphicsSceneMouseEvent *event){
 
 
     if((piezaa != NULL && mainwindow->turno == piezaa->getColor())|| item != NULL){//validar que el cuadrado tenga una pieza
-
-        qDebug()<<(mainwindow->piezaSeleccionada == NULL);
-
         if(mainwindow->piezaSeleccionada == NULL){//en caso sea la primera vez que
             clearBoxes();
-            qDebug()<<"ENTRO funciton: "  ;
             QList<Coordenada> opciones;
             if(estado){//verificar si existe ficha en el cuadrado clickeado
                 mainwindow->piezaSeleccionada = piezaa;
@@ -193,27 +153,32 @@ void cuadrado::MarcarCuadrado(cuadrado *box, int filaB, int columnaB){
     if((box->piezaa != NULL && box->piezaa->getColor()==mainwindow->turno)){//si marca a un compañero se omite
         return;
     }
-    qDebug()<<QString::number(filaB) + " - "+ QString::number(columnaB);
     PosibleMov *option = new PosibleMov(1);
     box->ubicacion2(option);
     mainwindow->addScene(option);
 }
 void cuadrado::Matar(){
-
+    if(piezaa->ficha == "rey"){
+        WinnerDialog guiR;
+        guiR.setModal(true);
+        if(piezaa->getColor()=="WHITE")
+            guiR.printWinner("GANA EL EQUIPO NEGRO");
+        else
+            guiR.printWinner("GANA EL EQUIPO BLANCO");
+        guiR.exec();
+        exit(1);
+    }
     Pieza *a =mainwindow->collection[fila][columna]->piezaa;
     if(a->getColor()=="WHITE")
         mainwindow->chess->white.removeOne(a);
     else
         mainwindow->chess->black.removeOne(a);
-    for(int i = 0;i<mainwindow->chess->black.size();i++)
-        qDebug()<<mainwindow->chess->black.at(i)->ficha;
     mainwindow->collection[fila][columna]->piezaa = mainwindow->piezaSeleccionada;
     delete(a);//eliminar la pieza victimada----------
     //formatear los valores del cuadrado atacado
     mainwindow->piezaSeleccionada->getCuadrado()->estado = false;
     mainwindow->piezaSeleccionada->getCuadrado()->piezaa = NULL;
     //ubicar pieza victimaria
-    //piezaa = mainwindow->piezaSeleccionada;
     mainwindow->collection[fila][columna]->ubicacion(piezaa);
     mainwindow->piezaSeleccionada = NULL;
     clearBoxes();
@@ -223,8 +188,8 @@ void cuadrado::Matar(){
     }else{
         mainwindow->turno = &mainwindow->turnoA;
     }
-    if(mainwindow->verificarJaque())
-        qDebug()<<"Estas en jaque prro";
+    mainwindow->verificarJaque();
+
 }
 void cuadrado::MoverFicha(){
     cuadrado *boxTmp = mainwindow->piezaSeleccionada->getCuadrado();//de que cuadrado viene la pieza
@@ -244,13 +209,57 @@ void cuadrado::MoverFicha(){
     }else{
         mainwindow->turno = &mainwindow->turnoA;
     }
-    if(mainwindow->verificarJaque()){
-        qDebug()<<"Estas en jaque";
+    mainwindow->verificarJaque();
 
-    }
 }
-Pieza* cuadrado::cambiarPeon(){
-
+Pieza* cuadrado::cambiarPeon(Pieza *piece){
+    elejirficha guiR;
+    guiR.setModal(true);
+    guiR.setEleccion(eleccion);
+    guiR.exec();
+    if(mainwindow->piezaSeleccionada->getColor()=="WHITE"){
+        //Pieza *tmp = piezaa;
+        Pieza *a =piece;
+        piece = NULL;
+        if(*eleccion == "torre"){
+            piece = new torre("WHITE");
+            piece->ficha ="torre";
+        }else if(*eleccion =="reina"){
+            piece = new reina("WHITE");
+            piece->ficha ="reina";
+        }else if(*eleccion=="alfil"){
+            piece = new alfil("WHITE");
+            piece->ficha ="alfil";
+        }else if(*eleccion =="caballo"){
+            piece = new caballo("WHITE");
+            piece->ficha ="caballo";
+        }
+        mainwindow->addScene(piece);
+        mainwindow->chess->white.append(piece);
+        mainwindow->chess->white.removeOne(a);
+        delete(a);//eliminar la pieza victimada----------
+    }else {
+        //Pieza *tmp = piezaa;
+        Pieza *a =piece;
+        if(*eleccion == "torre"){
+            piece = new torre("BLACK");
+            piece->ficha ="torre";
+        }else if(*eleccion =="reina"){
+            piece = new reina("BLACK");
+            piece->ficha ="reina";
+        }else if(*eleccion=="alfil"){
+            piece = new alfil("BLACK");
+            piece->ficha ="alfil";
+        }else if(*eleccion =="caballo"){
+            piece = new caballo("BLACK");
+            piece->ficha ="caballo";
+        }
+        mainwindow->addScene(piece);
+        mainwindow->chess->black.append(piece);
+        mainwindow->chess->black.removeOne(a);
+        delete(a);//eliminar la pieza victimada----------
+    }
+    return piece;
 }
 
 //mainwindow->collection[filaB][columnaB];

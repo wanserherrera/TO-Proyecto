@@ -29,7 +29,8 @@ SOURCES += \
     reina.cpp \
     rey.cpp \
     tablero.cpp \
-    torre.cpp
+    torre.cpp \
+    winnerdialog.cpp
 
 HEADERS += \
     alfil.h \
@@ -44,11 +45,13 @@ HEADERS += \
     reina.h \
     rey.h \
     tablero.h \
-    torre.h
+    torre.h \
+    winnerdialog.h
 
 FORMS += \
     elejirficha.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    winnerdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

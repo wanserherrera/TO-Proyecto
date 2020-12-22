@@ -19,7 +19,6 @@ QList<Coordenada> torre::movimientos(){
     bool derecha = true;
     bool izquierda = true;
     QList<Coordenada> opciones;
-    qDebug()<<"MOVER TORRE";
     int i = 1;
     while(i<8){
         if(arriba  && this->getCuadrado()->fila+i< 8){

@@ -45,7 +45,7 @@ public:
     void Matar();
     void sacarDeLista(Pieza *a);
     bool isEmpty();
-    Pieza* cambiarPeon();
+    Pieza* cambiarPeon(Pieza *piece);
     int fila;
     int columna;
     Pieza *piezaa;

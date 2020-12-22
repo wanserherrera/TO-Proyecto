@@ -58,7 +58,6 @@ QList<Coordenada> Peon::movimientos(){
            }
 
         }
-        qDebug()<<"\tENTRO Peon: "+QString::number(this->getCuadrado()->columna);
 
     }else{
 
@@ -96,12 +95,7 @@ QList<Coordenada> Peon::movimientos(){
            }
 
         }
-        /*qDebug()<<"\tENTRO Peon: "+QString::number(this->getCuadrado()->columna);
-        if(getCuadrado()->fila == 6){
-            opciones.append(Coordenada(this->getCuadrado()->columna,this->getCuadrado()->fila-1));
-            opciones.append(Coordenada(this->getCuadrado()->columna,this->getCuadrado()->fila-2));
-        }else
-            opciones.append(Coordenada(this->getCuadrado()->columna,this->getCuadrado()->fila-1));*/
+
     }
     return opciones;
 
