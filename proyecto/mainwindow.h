@@ -5,6 +5,7 @@
 #include <QMainWindow>
 #include "tablero.h"
 #include "cuadrado.h"
+#include "pieza.h"
 QT_BEGIN_NAMESPACE
 
 QT_END_NAMESPACE
@@ -19,12 +20,25 @@ public:
     void crearTablero();
     void drawDeadHolder(int x, int y,QColor color);
     void addScene(QGraphicsItem *item);
-
-    cuadrado *collection[9][9];
-
-private:
-    QGraphicsScene *gameScene;
+    void dibujarBorde();
+    QString getText();
+    bool verificarJaque();
+    void setText(QString text);
+    cuadrado *collection[8][8];
+    QList <Pieza *> piezaViva;
+    Pieza *piezaSeleccionada;
+    Pieza *reyWhite;
+    Pieza *reyBlack;
+    QString *turno;
+    QString turnoA = "WHITE";
+    QString turnoB = "BLACK";
     tablero *chess;
+    QGraphicsTextItem *labelJaqueWhite;
+    QGraphicsTextItem *labelJaqueBlack;
+private:
+    QString texto;
+    QGraphicsScene *gameScene;
+
     QGraphicsRectItem * deadHolder;//proporciona un elemento rectangular que puede trabajr con a QGraphicsScene
 
 };

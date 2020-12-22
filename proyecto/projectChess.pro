@@ -16,20 +16,47 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    alfil.cpp \
+    caballo.cpp \
+    coordenada.cpp \
     cuadrado.cpp \
+    elejirficha.cpp \
     main.cpp \
     mainwindow.cpp \
-    tablero.cpp
+    peon.cpp \
+    pieza.cpp \
+    posiblemov.cpp \
+    reina.cpp \
+    rey.cpp \
+    tablero.cpp \
+    torre.cpp
 
 HEADERS += \
+    alfil.h \
+    caballo.h \
+    coordenada.h \
     cuadrado.h \
+    elejirficha.h \
     mainwindow.h \
-    tablero.h
+    peon.h \
+    pieza.h \
+    posiblemov.h \
+    reina.h \
+    rey.h \
+    tablero.h \
+    torre.h
 
 FORMS += \
+    elejirficha.ui \
     mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    bishop1.png
+
+RESOURCES += \
+    imagenes.qrc
