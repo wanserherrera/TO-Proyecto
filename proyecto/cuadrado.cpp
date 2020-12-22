@@ -245,7 +245,7 @@ void cuadrado::MoverFicha(){
         mainwindow->turno = &mainwindow->turnoA;
     }
     if(mainwindow->verificarJaque()){
-        qDebug()<<"Estas en jaque prro";
+        qDebug()<<"Estas en jaque";
 
     }
 }
